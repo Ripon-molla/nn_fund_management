@@ -1,0 +1,210 @@
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "100m"
+    max-file: "10"
+
+networks:
+  nn-internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+  nn-public:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+volumes:
+  postgres-data:
+    driver: local
+  odoo-data:
+    driver: local
+  odoo-filestore:
+    driver: local
+  odoo-log:
+    driver: local
+  backup-data:
+    driver: local
+  certbot-etc:
+    driver: local
+  certbot-var:
+    driver: local
+  nginx-cache:
+    driver: local
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: nn-postgres
+    restart: unless-stopped
+    networks:
+      - nn-internal
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME:-nn_fund_management}
+      POSTGRES_USER: ${DB_USER:-odoo}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Missing DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--data-checksums --encoding=UTF8"
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-odoo} -d ${DB_NAME:-nn_fund_management}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging: *default-logging
+    command:
+      - -c
+      - shared_buffers=1GB
+      - -c
+      - effective_cache_size=3GB
+      - -c
+      - work_mem=64MB
+      - -c
+      - maintenance_work_mem=256MB
+      - -c
+      - random_page_cost=1.1
+      - -c
+      - effective_io_concurrency=200
+      - -c
+      - wal_level=replica
+      - -c
+      - max_wal_senders=3
+      - -c
+      - max_connections=100
+
+
+  odoo:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: nn-fund-odoo:18.0
+    container_name: nn-odoo
+    restart: unless-stopped
+    ports:
+      - "8069:8069"
+      - "8071:8071"
+      - "8072:8072"
+    networks:
+      - nn-internal
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - odoo-data:/opt/odoo/data
+      - odoo-filestore:/opt/odoo/data/filestore
+      - odoo-log:/var/log/odoo
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: ${DB_USER:-odoo}
+      DB_PASSWORD: ${DB_PASSWORD:?Missing DB_PASSWORD}
+      DB_NAME: ${DB_NAME:-nn_fund_management}
+      DB_FILTER: ${DB_FILTER:-nn_fund_management.*}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Missing ADMIN_PASSWORD}
+      WORKERS: ${WORKERS:-4}
+      MAX_CRON_THREADS: ${MAX_CRON_THREADS:-2}
+      LIMIT_TIME_CPU: "600"
+      LIMIT_TIME_REAL: "1200"
+      LIMIT_MEMORY_SOFT: "2684354560"
+      LIMIT_MEMORY_HARD: "4294967296"
+      LIST_DB: ${LIST_DB:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_SSL: ${SMTP_SSL:-False}
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-true}
+      SESSION_TTL: ${SESSION_TTL:-3600}
+    secrets:
+      - db_password
+      - admin_password
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-o", "/dev/null", "http://localhost:8069/web"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging: *default-logging
+
+  nginx:
+    image: nginx:1.26-alpine
+    container_name: nn-nginx
+    restart: unless-stopped
+    networks:
+      - nn-internal
+      - nn-public
+    depends_on:
+      - odoo
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - nginx-cache:/var/cache/nginx
+      - odoo-log:/var/log/nginx
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+    logging: *default-logging
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: nn-certbot
+    restart: unless-stopped
+    networks:
+      - nn-public
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    depends_on:
+      - nginx
+    logging: *default-logging
+
+  backup:
+    image: postgres:16-alpine
+    container_name: nn-backup
+    restart: unless-stopped
+    networks:
+      - nn-internal
+    volumes:
+      - backup-data:/backup
+      - odoo-filestore:/opt/odoo/data/filestore:ro
+      - ./scripts/backup.sh:/usr/local/bin/backup.sh
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: ${DB_USER:-odoo}
+      DB_PASSWORD: ${DB_PASSWORD:?Missing DB_PASSWORD}
+      DB_NAME: ${DB_NAME:-nn_fund_management}
+      FILESTORE_DIR: /opt/odoo/data/filestore
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
+      BACKUP_DIR: /backup
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-}
+      AWS_S3_ENDPOINT: ${AWS_S3_ENDPOINT:-}
+    entrypoint: |
+      /bin/sh -c "
+        chmod +x /usr/local/bin/backup.sh
+        echo '0 2 * * * /usr/local/bin/backup.sh' > /etc/crontabs/root
+        crond -f -l 2
+      "
+    logging: *default-logging
+
+secrets:
+  db_password:
+    file: ${DB_PASSWORD_FILE:-./secrets/db_password.txt}
+  admin_password:
+    file: ${ADMIN_PASSWORD_FILE:-./secrets/admin_password.txt}

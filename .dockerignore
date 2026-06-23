@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg/
+dist/
+build/
+*.whl
+.eggs/
+.tox/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Docker (only exclude docker-compose, keep Dockerfile assets)
+.env
+.dockerignore
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Tests (not needed in production image)
+tests/
+
+# Documentation
+docs/
+*.md
+*.rst
+
+# Scripts
+scripts/

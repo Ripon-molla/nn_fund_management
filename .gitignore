@@ -1,0 +1,55 @@
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Environment & Secrets ─────────────────────────────────────
+.env
+.env.local
+secrets/
+
+# ── IDE / Editors ─────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+
+# ── Odoo Runtime ──────────────────────────────────────────────
+filestore/
+sessions/
+*.log
+logs/
+
+# ── Docker Volumes ────────────────────────────────────────────
+postgres-data/
+pgdata/
+odoo-web-data/
+
+# ── Backups ───────────────────────────────────────────────────
+backup/
+backups/
+*.dump
+*.sql.gz
+*.tar.gz
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ── Testing / Coverage ───────────────────────────────────────
+.coverage
+coverage/
+htmlcov/
+.pytest_cache/
+
+# ── Documentation build (if any) ──────────────────────────────
+_site/
+site/

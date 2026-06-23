@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Finance Dashboard -->
+    <record id="view_nn_fund_dashboard" model="ir.ui.view">
+        <field name="name">nn.fund.dashboard</field>
+        <field name="model">nn.fund.dashboard</field>
+        <field name="arch" type="xml">
+            <form readonly="1">
+                <field name="name" invisible="1"/>
+                <div class="o_dashboard">
+                    <div class="o_dashboard_header">
+                        <h1>Finance Dashboard</h1>
+                    </div>
+
+                    <!-- ════════════════════════════════════════════
+                         KPI CARDS
+                         ════════════════════════════════════════════ -->
+                    <div class="o_dashboard_cards row">
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-info">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Funds Received</h5>
+                                    <h2 class="card-text">
+                                        <field name="total_funds_received" widget="monetary"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-success">
+                                <div class="card-body">
+                                    <h5 class="card-title">Available Balance</h5>
+                                    <h2 class="card-text">
+                                        <field name="unassigned_balance" widget="monetary"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-warning">
+                                <div class="card-body">
+                                    <h5 class="card-title">Held Balance</h5>
+                                    <h2 class="card-text">
+                                        <field name="held_balance" widget="monetary"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-secondary">
+                                <div class="card-body">
+                                    <h5 class="card-title">Assigned Balance</h5>
+                                    <h2 class="card-text">
+                                        <field name="assigned_balance" widget="monetary"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-danger">
+                                <div class="card-body">
+                                    <h5 class="card-title">Spent Amount</h5>
+                                    <h2 class="card-text">
+                                        <field name="spent_balance" widget="monetary"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-primary">
+                                <div class="card-body">
+                                    <h5 class="card-title">Pending Approvals</h5>
+                                    <h2 class="card-text">
+                                        <field name="pending_approvals_count"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-info">
+                                <div class="card-body">
+                                    <h5 class="card-title">Active Projects</h5>
+                                    <h2 class="card-text">
+                                        <field name="active_projects_count"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-secondary">
+                                <div class="card-body">
+                                    <h5 class="card-title">Fund Accounts</h5>
+                                    <h2 class="card-text">
+                                        <field name="fund_accounts_count"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-warning">
+                                <div class="card-body">
+                                    <h5 class="card-title">Pending Allocations</h5>
+                                    <h2 class="card-text">
+                                        <field name="pending_allocations_count"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-warning">
+                                <div class="card-body">
+                                    <h5 class="card-title">Pending Requisitions</h5>
+                                    <h2 class="card-text">
+                                        <field name="pending_requisitions_count"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card text-white bg-warning">
+                                <div class="card-body">
+                                    <h5 class="card-title">Pending Transfers</h5>
+                                    <h2 class="card-text">
+                                        <field name="pending_transfers_count"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ════════════════════════════════════════════
+                         TABLES SECTION
+                         ════════════════════════════════════════════ -->
+                    <div class="row mt-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Project Balances</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="project_balances" nolabel="1" readonly="1">
+                                        <list limit="10" create="0" edit="0" delete="0">
+                                            <field name="display_name"/>
+                                            <field name="fund_account_id"/>
+                                            <field name="allocated_amount" widget="monetary"/>
+                                            <field name="spent_amount" widget="monetary"/>
+                                            <field name="remaining_amount" widget="monetary"/>
+                                            <field name="available_balance" widget="monetary"/>
+                                        </list>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Expense Head Balances</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="expense_head_balances" nolabel="1" readonly="1">
+                                        <list limit="10" create="0" edit="0" delete="0">
+                                            <field name="display_name"/>
+                                            <field name="project_id"/>
+                                            <field name="allocated_amount" widget="monetary"/>
+                                            <field name="spent_amount" widget="monetary"/>
+                                            <field name="remaining_amount" widget="monetary"/>
+                                        </list>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Recent Fund Movements</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="recent_transactions" nolabel="1" readonly="1">
+                                        <list limit="10" create="0" edit="0" delete="0">
+                                            <field name="date"/>
+                                            <field name="reference"/>
+                                            <field name="fund_account_id"/>
+                                            <field name="transaction_type"/>
+                                            <field name="debit" widget="monetary"/>
+                                            <field name="credit" widget="monetary"/>
+                                        </list>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Recent Approvals</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="recent_approvals" nolabel="1" readonly="1">
+                                        <list limit="10" create="0" edit="0" delete="0">
+                                            <field name="date"/>
+                                            <field name="request_reference"/>
+                                            <field name="request_type"/>
+                                            <field name="user_id"/>
+                                            <field name="previous_state"/>
+                                            <field name="new_state"/>
+                                            <field name="amount" widget="monetary"/>
+                                        </list>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ════════════════════════════════════════════
+                         CHARTS SECTION
+                         ════════════════════════════════════════════ -->
+                    <div class="row mt-4">
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Monthly Incoming Funds</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="monthly_incoming_chart_ids" nolabel="1" readonly="1" limit="10">
+                                        <list>
+                                            <field name="month"/>
+                                            <field name="amount" widget="monetary"/>
+                                        </list>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Allocation Distribution</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="allocation_dist_chart_ids" nolabel="1" readonly="1" limit="10">
+                                        <list>
+                                            <field name="project_name"/>
+                                            <field name="amount" widget="monetary"/>
+                                        </list>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Spending Distribution</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="spending_dist_chart_ids" nolabel="1" readonly="1" limit="10">
+                                        <list>
+                                            <field name="project_name"/>
+                                            <field name="amount" widget="monetary"/>
+                                        </list>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_nn_fund_dashboard" model="ir.actions.act_window">
+        <field name="name">Finance Dashboard</field>
+        <field name="res_model">nn.fund.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_nn_fund_dashboard"/>
+        <field name="target">inline</field>
+        <field name="context">{'create': False, 'edit': False, 'no_dashboard_save': True}</field>
+    </record>
+</odoo>

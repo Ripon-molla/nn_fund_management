@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_nn_fund_bill_tree" model="ir.ui.view">
+        <field name="name">nn.fund.bill.tree</field>
+        <field name="model">nn.fund.bill</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="reference"/>
+                <field name="requisition_id"/>
+                <field name="project_id"/>
+                <field name="expense_head_id"/>
+                <field name="amount" widget="monetary" sum="Total"/>
+                <field name="date"/>
+                <field name="vendor_name"/>
+                <field name="state"/>
+                <field name="company_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_nn_fund_bill_form" model="ir.ui.view">
+        <field name="name">nn.fund.bill.form</field>
+        <field name="model">nn.fund.bill</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_post" type="object"
+                            string="Post" invisible="state != 'draft'"
+                            class="btn-primary"/>
+                    <button name="action_cancel" type="object"
+                            string="Cancel" invisible="state != 'posted'"
+                            class="btn-warning"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="reference"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="requisition_id"/>
+                            <field name="fund_account_id"/>
+                            <field name="project_id"/>
+                            <field name="expense_head_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="amount" widget="monetary"/>
+                            <field name="date"/>
+                            <field name="vendor_name"/>
+                            <field name="invoice_reference"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="requisition_id" string="Requisition Remaining"
+                               widget="monetary"
+                               invisible="not requisition_id"
+                               options="{'field': 'remaining_billable_amount'}"/>
+                    </group>
+                    <notebook>
+                        <page string="Ledger Info">
+                            <group>
+                                <field name="ledger_entry_id"/>
+                                <field name="cancellation_ledger_entry_id"/>
+                            </group>
+                            <field name="ledger_entry_ids" nolabel="1">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="reference"/>
+                                    <field name="transaction_type"/>
+                                    <field name="debit" widget="monetary"/>
+                                    <field name="credit" widget="monetary"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_nn_fund_bill_search" model="ir.ui.view">
+        <field name="name">nn.fund.bill.search</field>
+        <field name="model">nn.fund.bill</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="requisition_id"/>
+                <field name="project_id"/>
+                <field name="expense_head_id"/>
+                <field name="vendor_name"/>
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="posted" string="Posted" domain="[('state','=','posted')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="State" context="{'group_by':'state'}"/>
+                    <filter name="group_by_project" string="Project" context="{'group_by':'project_id'}"/>
+                    <filter name="group_by_requisition" string="Requisition" context="{'group_by':'requisition_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_nn_fund_bill" model="ir.actions.act_window">
+        <field name="name">Bills</field>
+        <field name="res_model">nn.fund.bill</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_nn_fund_bill_search"/>
+    </record>
+</odoo>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_nn_approval_history_tree" model="ir.ui.view">
+        <field name="name">nn.approval.history.tree</field>
+        <field name="model">nn.approval.history</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date"/>
+                <field name="request_reference"/>
+                <field name="request_type"/>
+                <field name="user_id"/>
+                <field name="approval_level"/>
+                <field name="previous_state"/>
+                <field name="new_state"/>
+                <field name="amount" widget="monetary"/>
+                <field name="fund_account_id"/>
+                <field name="project_id"/>
+                <field name="company_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_nn_approval_history_form" model="ir.ui.view">
+        <field name="name">nn.approval.history.form</field>
+        <field name="model">nn.approval.history</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="request_type"/>
+                            <field name="request_reference"/>
+                            <field name="user_id"/>
+                            <field name="approval_level"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="previous_state"/>
+                            <field name="new_state"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="fund_account_id"/>
+                        <field name="project_id"/>
+                        <field name="expense_head_id"/>
+                    </group>
+                    <group string="Comment">
+                        <field name="comment" nolabel="1"/>
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="view_nn_approval_history_search" model="ir.ui.view">
+        <field name="name">nn.approval.history.search</field>
+        <field name="model">nn.approval.history</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="request_reference"/>
+                <field name="user_id"/>
+                <field name="request_type"/>
+                <field name="approval_level"/>
+                <field name="new_state"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_type" string="Request Type" context="{'group_by':'request_type'}"/>
+                    <filter name="group_by_level" string="Approval Level" context="{'group_by':'approval_level'}"/>
+                    <filter name="group_by_user" string="Approver" context="{'group_by':'user_id'}"/>
+                    <filter name="group_by_date" string="Date" context="{'group_by':'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_nn_approval_history" model="ir.actions.act_window">
+        <field name="name">Approval History</field>
+        <field name="res_model">nn.approval.history</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_nn_approval_history_search"/>
+    </record>
+</odoo>

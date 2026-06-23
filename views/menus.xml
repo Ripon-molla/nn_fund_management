@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_nn_fund_management_root"
+              name="NN Fund Management"
+              sequence="10"
+              web_icon="nn_fund_management,static/description/icon.png"/>
+
+    <!-- Dashboard -->
+    <menuitem id="menu_nn_fund_dashboard"
+              name="Dashboard"
+              parent="menu_nn_fund_management_root"
+              sequence="10"
+              action="action_nn_fund_dashboard"/>
+
+    <!-- Fund Accounts -->
+    <menuitem id="menu_nn_fund_accounts"
+              name="Fund Accounts"
+              parent="menu_nn_fund_management_root"
+              sequence="20"
+              action="action_nn_fund_account"/>
+
+    <!-- Incoming Funds -->
+    <menuitem id="menu_nn_incoming_funds"
+              name="Incoming Funds"
+              parent="menu_nn_fund_management_root"
+              sequence="30"
+              action="action_nn_incoming_fund"/>
+
+    <!-- Allocations -->
+    <menuitem id="menu_nn_fund_allocations"
+              name="Allocations"
+              parent="menu_nn_fund_management_root"
+              sequence="40"
+              action="action_nn_fund_allocation"/>
+
+    <!-- Projects -->
+    <menuitem id="menu_nn_projects"
+              name="Projects"
+              parent="menu_nn_fund_management_root"
+              sequence="50"
+              action="action_nn_project"/>
+
+    <!-- Expense Heads -->
+    <menuitem id="menu_nn_expense_heads"
+              name="Expense Heads"
+              parent="menu_nn_fund_management_root"
+              sequence="60"
+              action="action_nn_expense_head"/>
+
+    <!-- Requisitions -->
+    <menuitem id="menu_nn_fund_requisitions"
+              name="Requisitions"
+              parent="menu_nn_fund_management_root"
+              sequence="70"
+              action="action_nn_fund_requisition"/>
+
+    <!-- Bills -->
+    <menuitem id="menu_nn_fund_bills"
+              name="Bills"
+              parent="menu_nn_fund_management_root"
+              sequence="80"
+              action="action_nn_fund_bill"/>
+
+    <!-- Transfers -->
+    <menuitem id="menu_nn_fund_transfers"
+              name="Transfers"
+              parent="menu_nn_fund_management_root"
+              sequence="90"
+              action="action_nn_fund_transfer"/>
+
+    <!-- Ledger -->
+    <menuitem id="menu_nn_fund_ledger"
+              name="Ledger"
+              parent="menu_nn_fund_management_root"
+              sequence="100"
+              action="action_nn_fund_ledger"/>
+
+    <!-- Ledger Reconciliation -->
+    <menuitem id="menu_nn_ledger_reconciliation"
+              name="Ledger Reconciliation"
+              parent="menu_nn_fund_management_root"
+              sequence="105"
+              action="action_nn_ledger_reconciliation"
+              groups="group_fund_administrator,group_finance_user"/>
+
+    <!-- Reports -->
+    <menuitem id="menu_nn_fund_reports"
+              name="Reports"
+              parent="menu_nn_fund_management_root"
+              sequence="150"
+              groups="group_fund_administrator,group_finance_user">
+        <menuitem id="menu_report_fund_ledger"
+                  name="Fund Ledger Report"
+                  sequence="10"
+                  action="action_report_fund_ledger"
+                  groups="group_fund_administrator,group_finance_user"/>
+        <menuitem id="menu_report_allocation"
+                  name="Allocation Report"
+                  sequence="20"
+                  action="action_report_allocation"
+                  groups="group_fund_administrator,group_finance_user"/>
+        <menuitem id="menu_report_requisition"
+                  name="Requisition Report"
+                  sequence="30"
+                  action="action_report_requisition"
+                  groups="group_fund_administrator,group_finance_user"/>
+        <menuitem id="menu_report_transfer"
+                  name="Transfer Report"
+                  sequence="40"
+                  action="action_report_transfer"
+                  groups="group_fund_administrator,group_finance_user"/>
+        <menuitem id="menu_report_bill"
+                  name="Bill Report"
+                  sequence="50"
+                  action="action_report_bill"
+                  groups="group_fund_administrator,group_finance_user"/>
+        <menuitem id="menu_report_approval_history"
+                  name="Approval History Report"
+                  sequence="60"
+                  action="action_report_approval_history"
+                  groups="group_fund_administrator,group_finance_user"/>
+        <menuitem id="menu_report_project_balance"
+                  name="Project Balance Report"
+                  sequence="70"
+                  action="action_report_project_balance"
+                  groups="group_fund_administrator,group_finance_user"/>
+        <menuitem id="menu_report_expense_head_balance"
+                  name="Expense Head Balance Report"
+                  sequence="80"
+                  action="action_report_expense_head_balance"
+                  groups="group_fund_administrator,group_finance_user"/>
+    </menuitem>
+
+    <!-- Configuration -->
+    <menuitem id="menu_nn_fund_configuration"
+              name="Configuration"
+              parent="menu_nn_fund_management_root"
+              sequence="200"
+              groups="group_fund_administrator"/>
+
+    <!-- Approval Rules -->
+    <menuitem id="menu_nn_approval_rules"
+              name="Approval Rules"
+              parent="menu_nn_fund_configuration"
+              sequence="10"
+              action="action_nn_approval_rule"
+              groups="group_fund_administrator"/>
+
+    <!-- Approval Matrices -->
+    <menuitem id="menu_nn_approval_matrices"
+              name="Approval Matrices"
+              parent="menu_nn_fund_configuration"
+              sequence="15"
+              action="action_nn_approval_matrix"
+              groups="group_fund_administrator"/>
+
+    <!-- Bank Email Parsers -->
+    <menuitem id="menu_nn_bank_email_parsers"
+              name="Bank Email Parsers"
+              parent="menu_nn_fund_configuration"
+              sequence="20"
+              action="action_nn_bank_email_parser"
+              groups="group_fund_administrator"/>
+
+    <!-- Audit -->
+    <menuitem id="menu_nn_fund_audit"
+              name="Audit"
+              parent="menu_nn_fund_management_root"
+              sequence="300"
+              groups="group_fund_administrator,group_finance_user">
+        <menuitem id="menu_nn_approval_history"
+                  name="Approval History"
+                  sequence="10"
+                  action="action_nn_approval_history"
+                  groups="group_fund_administrator,group_finance_user"/>
+        <menuitem id="menu_nn_audit_log"
+                  name="Audit Log"
+                  sequence="20"
+                  action="action_nn_audit_log"
+                  groups="group_fund_administrator,group_finance_user"/>
+        <menuitem id="menu_nn_bank_email_log"
+                  name="Bank Email Log"
+                  sequence="30"
+                  action="action_nn_bank_email_log"
+                  groups="group_fund_administrator,group_finance_user"/>
+    </menuitem>
+</odoo>

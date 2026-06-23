@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_nn_audit_log_tree" model="ir.ui.view">
+        <field name="name">nn.audit.log.tree</field>
+        <field name="model">nn.audit.log</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date"/>
+                <field name="reference"/>
+                <field name="user_id"/>
+                <field name="action"/>
+                <field name="previous_state"/>
+                <field name="new_state"/>
+                <field name="amount" widget="monetary"/>
+                <field name="model"/>
+                <field name="company_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_nn_audit_log_form" model="ir.ui.view">
+        <field name="name">nn.audit.log.form</field>
+        <field name="model">nn.audit.log</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model"/>
+                            <field name="reference"/>
+                            <field name="user_id"/>
+                            <field name="date"/>
+                            <field name="action"/>
+                        </group>
+                        <group>
+                            <field name="previous_state"/>
+                            <field name="new_state"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="fund_account_id"/>
+                        <field name="project_id"/>
+                        <field name="expense_head_id"/>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_nn_audit_log_search" model="ir.ui.view">
+        <field name="name">nn.audit.log.search</field>
+        <field name="model">nn.audit.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="user_id"/>
+                <field name="action"/>
+                <field name="model"/>
+                <filter name="financial" string="Financial Actions"
+                        domain="[('action','in',['confirm','reverse','post','approve'])]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_action" string="Action" context="{'group_by':'action'}"/>
+                    <filter name="group_by_user" string="User" context="{'group_by':'user_id'}"/>
+                    <filter name="group_by_date" string="Date" context="{'group_by':'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_nn_audit_log" model="ir.actions.act_window">
+        <field name="name">Audit Log</field>
+        <field name="res_model">nn.audit.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_nn_audit_log_search"/>
+    </record>
+</odoo>

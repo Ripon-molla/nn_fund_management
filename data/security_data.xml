@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default Approval Rules -->
+        <record id="approval_rule_allocation_low" model="nn.approval.rule">
+            <field name="name">Allocation - Low Value</field>
+            <field name="request_type">nn.fund.allocation</field>
+            <field name="min_amount">0.0</field>
+            <field name="max_amount">50000.0</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_step_allocation_low_gm" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_allocation_low"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">gm</field>
+            <field name="approver_group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_allocation_medium" model="nn.approval.rule">
+            <field name="name">Allocation - Medium Value</field>
+            <field name="request_type">nn.fund.allocation</field>
+            <field name="min_amount">50000.01</field>
+            <field name="max_amount">200000.0</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_step_allocation_medium_gm" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_allocation_medium"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">gm</field>
+            <field name="approver_group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_step_allocation_medium_finance" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_allocation_medium"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">md</field>
+            <field name="approver_group_id" ref="group_md_approver"/>
+        </record>
+
+        <record id="approval_rule_allocation_high" model="nn.approval.rule">
+            <field name="name">Allocation - High Value</field>
+            <field name="request_type">nn.fund.allocation</field>
+            <field name="min_amount">200000.01</field>
+            <field name="max_amount">999999999.0</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_step_allocation_high_gm" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_allocation_high"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">gm</field>
+            <field name="approver_group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_step_allocation_high_md" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_allocation_high"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">md</field>
+            <field name="approver_group_id" ref="group_md_approver"/>
+        </record>
+
+        <!-- Requisition Rules -->
+        <record id="approval_rule_requisition_low" model="nn.approval.rule">
+            <field name="name">Requisition - Low Value</field>
+            <field name="request_type">nn.fund.requisition</field>
+            <field name="min_amount">0.0</field>
+            <field name="max_amount">50000.0</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_step_requisition_low_gm" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_requisition_low"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">gm</field>
+            <field name="approver_group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_requisition_medium" model="nn.approval.rule">
+            <field name="name">Requisition - Medium Value</field>
+            <field name="request_type">nn.fund.requisition</field>
+            <field name="min_amount">50000.01</field>
+            <field name="max_amount">200000.0</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_step_requisition_medium_gm" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_requisition_medium"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">gm</field>
+            <field name="approver_group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_step_requisition_medium_md" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_requisition_medium"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">md</field>
+            <field name="approver_group_id" ref="group_md_approver"/>
+        </record>
+
+        <record id="approval_rule_requisition_high" model="nn.approval.rule">
+            <field name="name">Requisition - High Value</field>
+            <field name="request_type">nn.fund.requisition</field>
+            <field name="min_amount">200000.01</field>
+            <field name="max_amount">999999999.0</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_step_requisition_high_gm" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_requisition_high"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">gm</field>
+            <field name="approver_group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_step_requisition_high_md" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_requisition_high"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">md</field>
+            <field name="approver_group_id" ref="group_md_approver"/>
+        </record>
+
+        <!-- Transfer Rules -->
+        <record id="approval_rule_transfer_low" model="nn.approval.rule">
+            <field name="name">Transfer - Low Value</field>
+            <field name="request_type">nn.fund.transfer</field>
+            <field name="min_amount">0.0</field>
+            <field name="max_amount">50000.0</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_step_transfer_low_gm" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_transfer_low"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">gm</field>
+            <field name="approver_group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_transfer_high" model="nn.approval.rule">
+            <field name="name">Transfer - High Value</field>
+            <field name="request_type">nn.fund.transfer</field>
+            <field name="min_amount">50000.01</field>
+            <field name="max_amount">999999999.0</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_step_transfer_high_gm" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_transfer_high"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">gm</field>
+            <field name="approver_group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_step_transfer_high_md" model="nn.approval.step">
+            <field name="rule_id" ref="approval_rule_transfer_high"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">md</field>
+            <field name="approver_group_id" ref="group_md_approver"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <!-- New Configurable Approval Rules -->
+        <record id="approval_rule_alloc_low_new" model="nn.approval.rule">
+            <field name="name">Allocation - Low Value</field>
+            <field name="request_type">nn.fund.allocation</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_rule_line_alloc_low_gm" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_alloc_low_new"/>
+            <field name="sequence">10</field>
+            <field name="minimum_amount">0.0</field>
+            <field name="maximum_amount">50000.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_alloc_med_new" model="nn.approval.rule">
+            <field name="name">Allocation - Medium Value</field>
+            <field name="request_type">nn.fund.allocation</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_rule_line_alloc_med_gm" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_alloc_med_new"/>
+            <field name="sequence">10</field>
+            <field name="minimum_amount">50000.01</field>
+            <field name="maximum_amount">200000.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_line_alloc_med_md" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_alloc_med_new"/>
+            <field name="sequence">20</field>
+            <field name="minimum_amount">50000.01</field>
+            <field name="maximum_amount">200000.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_md_approver"/>
+        </record>
+
+        <record id="approval_rule_alloc_high_new" model="nn.approval.rule">
+            <field name="name">Allocation - High Value</field>
+            <field name="request_type">nn.fund.allocation</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_rule_line_alloc_high_gm" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_alloc_high_new"/>
+            <field name="sequence">10</field>
+            <field name="minimum_amount">200000.01</field>
+            <field name="maximum_amount">999999999.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_line_alloc_high_md" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_alloc_high_new"/>
+            <field name="sequence">20</field>
+            <field name="minimum_amount">200000.01</field>
+            <field name="maximum_amount">999999999.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_md_approver"/>
+        </record>
+
+        <!-- Requisition Rules -->
+        <record id="approval_rule_req_low_new" model="nn.approval.rule">
+            <field name="name">Requisition - Low Value</field>
+            <field name="request_type">nn.fund.requisition</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_rule_line_req_low_gm" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_req_low_new"/>
+            <field name="sequence">10</field>
+            <field name="minimum_amount">0.0</field>
+            <field name="maximum_amount">50000.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_req_med_new" model="nn.approval.rule">
+            <field name="name">Requisition - Medium Value</field>
+            <field name="request_type">nn.fund.requisition</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_rule_line_req_med_gm" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_req_med_new"/>
+            <field name="sequence">10</field>
+            <field name="minimum_amount">50000.01</field>
+            <field name="maximum_amount">200000.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_line_req_med_md" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_req_med_new"/>
+            <field name="sequence">20</field>
+            <field name="minimum_amount">50000.01</field>
+            <field name="maximum_amount">200000.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_md_approver"/>
+        </record>
+
+        <record id="approval_rule_req_high_new" model="nn.approval.rule">
+            <field name="name">Requisition - High Value</field>
+            <field name="request_type">nn.fund.requisition</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_rule_line_req_high_gm" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_req_high_new"/>
+            <field name="sequence">10</field>
+            <field name="minimum_amount">200000.01</field>
+            <field name="maximum_amount">999999999.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_line_req_high_md" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_req_high_new"/>
+            <field name="sequence">20</field>
+            <field name="minimum_amount">200000.01</field>
+            <field name="maximum_amount">999999999.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_md_approver"/>
+        </record>
+
+        <!-- Transfer Rules -->
+        <record id="approval_rule_trf_low_new" model="nn.approval.rule">
+            <field name="name">Transfer - Low Value</field>
+            <field name="request_type">nn.fund.transfer</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_rule_line_trf_low_gm" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_trf_low_new"/>
+            <field name="sequence">10</field>
+            <field name="minimum_amount">0.0</field>
+            <field name="maximum_amount">50000.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_trf_high_new" model="nn.approval.rule">
+            <field name="name">Transfer - High Value</field>
+            <field name="request_type">nn.fund.transfer</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="approval_rule_line_trf_high_gm" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_trf_high_new"/>
+            <field name="sequence">10</field>
+            <field name="minimum_amount">50000.01</field>
+            <field name="maximum_amount">999999999.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_gm_approver"/>
+        </record>
+
+        <record id="approval_rule_line_trf_high_md" model="nn.approval.rule.line">
+            <field name="rule_id" ref="approval_rule_trf_high_new"/>
+            <field name="sequence">20</field>
+            <field name="minimum_amount">50000.01</field>
+            <field name="maximum_amount">999999999.0</field>
+            <field name="approver_type">group</field>
+            <field name="group_id" ref="group_md_approver"/>
+        </record>
+    </data>
+</odoo>

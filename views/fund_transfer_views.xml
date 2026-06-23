@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_nn_fund_transfer_tree" model="ir.ui.view">
+        <field name="name">nn.fund.transfer.tree</field>
+        <field name="model">nn.fund.transfer</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="reference"/>
+                <field name="source_project_id"/>
+                <field name="source_expense_head_id"/>
+                <field name="destination_project_id"/>
+                <field name="destination_expense_head_id"/>
+                <field name="source_fund_account_id"/>
+                <field name="amount" widget="monetary" sum="Total"/>
+                <field name="date"/>
+                <field name="state"/>
+                <field name="company_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_nn_fund_transfer_form" model="ir.ui.view">
+        <field name="name">nn.fund.transfer.form</field>
+        <field name="model">nn.fund.transfer</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object"
+                            string="Submit" invisible="state != 'draft'"
+                            class="btn-primary"/>
+                    <button name="action_approve" type="object"
+                            string="Approve" invisible="state != 'pending_approval'"
+                            class="btn-success"/>
+                    <button name="action_reject" type="object"
+                            string="Reject" invisible="state != 'submitted' and state != 'pending_approval'"
+                            class="btn-danger"/>
+                    <button name="action_cancel" type="object"
+                            string="Cancel" invisible="state != 'draft' and state != 'submitted' and state != 'pending_approval'"
+                            class="btn-secondary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="reference"/></h1>
+                    </div>
+                    <group string="Source">
+                        <group>
+                            <field name="source_project_id"
+                                   invisible="source_expense_head_id != False"/>
+                            <field name="source_expense_head_id"
+                                   invisible="source_project_id != False"/>
+                            <field name="source_fund_account_id"/>
+                        </group>
+                    </group>
+                    <group string="Destination">
+                        <group>
+                            <field name="destination_project_id"
+                                   invisible="destination_expense_head_id != False"/>
+                            <field name="destination_expense_head_id"
+                                   invisible="destination_project_id != False"/>
+                            <field name="destination_fund_account_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="amount" widget="monetary"/>
+                            <field name="date"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="requested_by"/>
+                            <field name="request_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason" nolabel="1" placeholder="Reason for transfer..."/>
+                    </group>
+                    <notebook>
+                        <page string="Ledger Entries">
+                            <field name="ledger_entry_ids" nolabel="1">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="reference"/>
+                                    <field name="transaction_type"/>
+                                    <field name="fund_account_id"/>
+                                    <field name="debit" widget="monetary"/>
+                                    <field name="credit" widget="monetary"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ledger Refs">
+                            <group>
+                                <field name="source_ledger_entry_id"/>
+                                <field name="destination_ledger_entry_id"/>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_nn_fund_transfer_search" model="ir.ui.view">
+        <field name="name">nn.fund.transfer.search</field>
+        <field name="model">nn.fund.transfer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="source_project_id"/>
+                <field name="source_expense_head_id"/>
+                <field name="destination_project_id"/>
+                <field name="destination_expense_head_id"/>
+                <field name="source_fund_account_id"/>
+                <field name="requested_by"/>
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="pending_approval" string="Pending Approval"
+                        domain="[('state','in',['submitted','pending_approval'])]"/>
+                <filter name="approved" string="Approved" domain="[('state','=','approved')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="State" context="{'group_by':'state'}"/>
+                    <filter name="group_by_source_project" string="Source Project" context="{'group_by':'source_project_id'}"/>
+                    <filter name="group_by_dest_project" string="Destination Project" context="{'group_by':'destination_project_id'}"/>
+                    <filter name="group_by_requested" string="Requested By" context="{'group_by':'requested_by'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_nn_fund_transfer" model="ir.actions.act_window">
+        <field name="name">Fund Transfers</field>
+        <field name="res_model">nn.fund.transfer</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_nn_fund_transfer_search"/>
+    </record>
+</odoo>

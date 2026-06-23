@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Multi-Company Record Rules -->
+    <record id="rule_nn_fund_account_company" model="ir.rule">
+        <field name="name">Fund Account: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_fund_account"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_fund_ledger_company" model="ir.rule">
+        <field name="name">Fund Ledger: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_fund_ledger"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_incoming_fund_company" model="ir.rule">
+        <field name="name">Incoming Fund: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_incoming_fund"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_project_company" model="ir.rule">
+        <field name="name">Project: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_project"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_expense_head_company" model="ir.rule">
+        <field name="name">Expense Head: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_expense_head"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_fund_allocation_company" model="ir.rule">
+        <field name="name">Fund Allocation: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_fund_allocation"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_fund_requisition_company" model="ir.rule">
+        <field name="name">Fund Requisition: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_fund_requisition"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_fund_bill_company" model="ir.rule">
+        <field name="name">Fund Bill: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_fund_bill"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_fund_transfer_company" model="ir.rule">
+        <field name="name">Fund Transfer: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_fund_transfer"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_approval_rule_company" model="ir.rule">
+        <field name="name">Approval Rule: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_approval_rule"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_approval_history_company" model="ir.rule">
+        <field name="name">Approval History: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_approval_history"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_nn_audit_log_company" model="ir.rule">
+        <field name="name">Audit Log: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_audit_log"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- ============================================================
+         BANK EMAIL PARSER: Multi-Company Isolation
+         ============================================================ -->
+    <record id="rule_nn_bank_email_parser_company" model="ir.rule">
+        <field name="name">Bank Email Parser: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_bank_email_parser"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- ============================================================
+         BANK EMAIL LOG: Multi-Company Isolation
+         ============================================================ -->
+    <record id="rule_nn_bank_email_log_company" model="ir.rule">
+        <field name="name">Bank Email Log: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_bank_email_log"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Cross-Company Transfer Prevention -->
+    <record id="rule_nn_fund_transfer_cross_company" model="ir.rule">
+        <field name="name">Fund Transfer: Prevent Cross-Company Transfers</field>
+        <field name="model_id" ref="model_nn_fund_transfer"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- ============================================================
+         LEDGER RECONCILIATION: Multi-Company Isolation
+         ============================================================ -->
+    <record id="rule_nn_ledger_reconciliation_company" model="ir.rule">
+        <field name="name">Ledger Reconciliation: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_ledger_reconciliation"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- ============================================================
+         LEDGER RECONCILIATION LINE: Multi-Company Isolation
+         ============================================================ -->
+    <record id="rule_nn_ledger_reconciliation_line_company" model="ir.rule">
+        <field name="name">Ledger Reconciliation Line: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_ledger_reconciliation_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- ============================================================
+         API IDEMPOTENCY KEY: Multi-Company Isolation
+         ============================================================ -->
+    <record id="rule_nn_api_idempotency_key_company" model="ir.rule">
+        <field name="name">API Idempotency Key: Multi-Company Isolation</field>
+        <field name="model_id" ref="model_nn_api_idempotency_key"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>

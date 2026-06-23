@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <!-- ============================================================
+       DEMO FUND ACCOUNTS
+       ============================================================ -->
+  <record id="demo_fund_account_main" model="nn.fund.account">
+    <field name="name">Main Operating Account</field>
+    <field name="code">MAIN-001</field>
+    <field name="type">main</field>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="active">True</field>
+  </record>
+  <record id="demo_fund_account_reserve" model="nn.fund.account">
+    <field name="name">Project Reserve Account</field>
+    <field name="code">RES-001</field>
+    <field name="type">project</field>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="active">True</field>
+  </record>
+  <!-- ============================================================
+       DEMO PROJECTS
+       ============================================================ -->
+  <record id="demo_project_a" model="nn.project">
+    <field name="name">Project Alpha</field>
+    <field name="code">PRJ-A</field>
+    <field name="fund_account_id" ref="demo_fund_account_main"/>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_project_b" model="nn.project">
+    <field name="name">Project Beta</field>
+    <field name="code">PRJ-B</field>
+    <field name="fund_account_id" ref="demo_fund_account_reserve"/>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <!-- ============================================================
+       DEMO EXPENSE HEADS (per project)
+       ============================================================ -->
+  <record id="demo_expense_head_a_salary" model="nn.expense.head">
+    <field name="name">Salaries</field>
+    <field name="code">A-SAL</field>
+    <field name="project_id" ref="demo_project_a"/>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_expense_head_a_travel" model="nn.expense.head">
+    <field name="name">Travel &amp; Transport</field>
+    <field name="code">A-TRV</field>
+    <field name="project_id" ref="demo_project_a"/>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_expense_head_a_equip" model="nn.expense.head">
+    <field name="name">Equipment</field>
+    <field name="code">A-EQP</field>
+    <field name="project_id" ref="demo_project_a"/>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_expense_head_b_salary" model="nn.expense.head">
+    <field name="name">Salaries</field>
+    <field name="code">B-SAL</field>
+    <field name="project_id" ref="demo_project_b"/>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_expense_head_b_materials" model="nn.expense.head">
+    <field name="name">Materials</field>
+    <field name="code">B-MAT</field>
+    <field name="project_id" ref="demo_project_b"/>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <!-- ============================================================
+       DEMO USERS (one per group for approval switching)
+       ============================================================ -->
+  <record id="demo_user_finance" model="res.users">
+    <field name="name">Alice Finance</field>
+    <field name="login">alice</field>
+    <field name="password">alice</field>
+    <field name="groups_id" eval="[(6,0,[ref('nn_fund_management.group_finance_user')])]"/>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="company_ids" eval="[(4,ref('base.main_company'))]"/>
+  </record>
+  <record id="demo_user_gm" model="res.users">
+    <field name="name">Bob GM</field>
+    <field name="login">bob</field>
+    <field name="password">bob</field>
+    <field name="groups_id" eval="[(6,0,[ref('nn_fund_management.group_gm_approver')])]"/>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="company_ids" eval="[(4,ref('base.main_company'))]"/>
+  </record>
+  <record id="demo_user_md" model="res.users">
+    <field name="name">Carol MD</field>
+    <field name="login">carol</field>
+    <field name="password">carol</field>
+    <field name="groups_id" eval="[(6,0,[ref('nn_fund_management.group_md_approver')])]"/>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="company_ids" eval="[(4,ref('base.main_company'))]"/>
+  </record>
+  <record id="demo_user_admin" model="res.users">
+    <field name="name">Dave Admin</field>
+    <field name="login">dave</field>
+    <field name="password">dave</field>
+    <field name="groups_id" eval="[(6,0,[ref('nn_fund_management.group_fund_administrator')])]"/>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="company_ids" eval="[(4,ref('base.main_company'))]"/>
+  </record>
+  <!-- ============================================================
+       SAMPLE INCOMING FUND — Pre-confirmed with 1,000,000
+       Creates the initial ledger balance for the Main Account.
+       ============================================================ -->
+  <record id="demo_incoming_fund" model="nn.incoming.fund">
+    <field name="reference">IF-DEMO-001</field>
+    <field name="fund_account_id" ref="demo_fund_account_main"/>
+    <field name="amount">1000000.0</field>
+    <field name="received_date" eval="(DateTime.today()).strftime('%Y-%m-%d')"/>
+    <field name="source_type">donor</field>
+    <field name="donor_name">Demo Donor Foundation</field>
+    <field name="source_reference">GRANT-2026-001</field>
+    <field name="state">confirmed</field>
+    <field name="notes">Seed capital for interview demo — 1,000,000 USD</field>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <!-- Ledger Entry for the incoming fund — creates the initial balance -->
+  <record id="demo_ledger_incoming" model="nn.fund.ledger">
+    <field name="date" eval="(DateTime.today()).strftime('%Y-%m-%d')"/>
+    <field name="reference">IF-DEMO-001</field>
+    <field name="transaction_type">incoming</field>
+    <field name="fund_account_id" ref="demo_fund_account_main"/>
+    <field name="reference_model">nn.incoming.fund</field>
+    <field name="reference_id" ref="demo_incoming_fund"/>
+    <field name="debit">1000000.0</field>
+    <field name="credit">0.0</field>
+    <field name="state">posted</field>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <!-- ============================================================
+       DYNAMIC APPROVAL MATRICES — 3 tiers per request type
+       Low (0-50k):     single GM step
+       Mid (50k-200k):  GM → Finance → MD
+       High (200k-1M+): GM → Finance → MD → Administrator
+       ============================================================ -->
+  <!-- ============ ALLOCATION ============ -->
+  <record id="demo_matrix_alloc_low" model="nn.approval.matrix">
+    <field name="name">Allocation - Low Value</field>
+    <field name="request_type">nn.fund.allocation</field>
+    <field name="min_amount">0.0</field>
+    <field name="max_amount">50000.0</field>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_matrix_line_alloc_low_gm" model="nn.approval.matrix.line">
+    <field name="matrix_id" ref="demo_matrix_alloc_low"/>
+    <field name="sequence">10</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_gm_approver"/>
+  </record>
+  <record id="demo_matrix_alloc_mid" model="nn.approval.matrix">
+    <field name="name">Allocation - Medium Value</field>
+    <field name="request_type">nn.fund.allocation</field>
+    <field name="min_amount">50000.01</field>
+    <field name="max_amount">200000.0</field>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_matrix_line_alloc_mid_gm" model="nn.approval.matrix.line">
+    <field name="sequence">10</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_gm_approver"/>
+    <field name="matrix_id" ref="demo_matrix_alloc_mid"/>
+  </record>
+  <record id="demo_matrix_line_alloc_mid_finance" model="nn.approval.matrix.line">
+    <field name="sequence">20</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_finance_user"/>
+    <field name="matrix_id" ref="demo_matrix_alloc_mid"/>
+  </record>
+  <record id="demo_matrix_line_alloc_mid_md" model="nn.approval.matrix.line">
+    <field name="sequence">30</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_md_approver"/>
+    <field name="matrix_id" ref="demo_matrix_alloc_mid"/>
+  </record>
+  <record id="demo_matrix_alloc_high" model="nn.approval.matrix">
+    <field name="name">Allocation - High Value</field>
+    <field name="request_type">nn.fund.allocation</field>
+    <field name="min_amount">200000.01</field>
+    <field name="max_amount">999999999.0</field>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_matrix_line_alloc_high_gm" model="nn.approval.matrix.line">
+    <field name="sequence">10</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_gm_approver"/>
+    <field name="matrix_id" ref="demo_matrix_alloc_high"/>
+  </record>
+  <record id="demo_matrix_line_alloc_high_finance" model="nn.approval.matrix.line">
+    <field name="sequence">20</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_finance_user"/>
+    <field name="matrix_id" ref="demo_matrix_alloc_high"/>
+  </record>
+  <record id="demo_matrix_line_alloc_high_md" model="nn.approval.matrix.line">
+    <field name="sequence">30</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_md_approver"/>
+    <field name="matrix_id" ref="demo_matrix_alloc_high"/>
+  </record>
+  <record id="demo_matrix_line_alloc_high_board" model="nn.approval.matrix.line">
+    <field name="sequence">40</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_fund_administrator"/>
+    <field name="matrix_id" ref="demo_matrix_alloc_high"/>
+  </record>
+  <!-- ============ REQUISITION ============ -->
+  <record id="demo_matrix_req_low" model="nn.approval.matrix">
+    <field name="name">Requisition - Low Value</field>
+    <field name="request_type">nn.fund.requisition</field>
+    <field name="min_amount">0.0</field>
+    <field name="max_amount">50000.0</field>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_matrix_line_req_low_gm" model="nn.approval.matrix.line">
+    <field name="sequence">10</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_gm_approver"/>
+    <field name="matrix_id" ref="demo_matrix_req_low"/>
+  </record>
+  <record id="demo_matrix_req_mid" model="nn.approval.matrix">
+    <field name="name">Requisition - Medium Value</field>
+    <field name="request_type">nn.fund.requisition</field>
+    <field name="min_amount">50000.01</field>
+    <field name="max_amount">200000.0</field>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_matrix_line_req_mid_gm" model="nn.approval.matrix.line">
+    <field name="sequence">10</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_gm_approver"/>
+    <field name="matrix_id" ref="demo_matrix_req_mid"/>
+  </record>
+  <record id="demo_matrix_line_req_mid_finance" model="nn.approval.matrix.line">
+    <field name="sequence">20</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_finance_user"/>
+    <field name="matrix_id" ref="demo_matrix_req_mid"/>
+  </record>
+  <record id="demo_matrix_line_req_mid_md" model="nn.approval.matrix.line">
+    <field name="sequence">30</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_md_approver"/>
+    <field name="matrix_id" ref="demo_matrix_req_mid"/>
+  </record>
+  <record id="demo_matrix_req_high" model="nn.approval.matrix">
+    <field name="name">Requisition - High Value</field>
+    <field name="request_type">nn.fund.requisition</field>
+    <field name="min_amount">200000.01</field>
+    <field name="max_amount">999999999.0</field>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_matrix_line_req_high_gm" model="nn.approval.matrix.line">
+    <field name="sequence">10</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_gm_approver"/>
+    <field name="matrix_id" ref="demo_matrix_req_high"/>
+  </record>
+  <record id="demo_matrix_line_req_high_finance" model="nn.approval.matrix.line">
+    <field name="sequence">20</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_finance_user"/>
+    <field name="matrix_id" ref="demo_matrix_req_high"/>
+  </record>
+  <record id="demo_matrix_line_req_high_md" model="nn.approval.matrix.line">
+    <field name="sequence">30</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_md_approver"/>
+    <field name="matrix_id" ref="demo_matrix_req_high"/>
+  </record>
+  <record id="demo_matrix_line_req_high_board" model="nn.approval.matrix.line">
+    <field name="sequence">40</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_fund_administrator"/>
+    <field name="matrix_id" ref="demo_matrix_req_high"/>
+  </record>
+  <!-- ============ TRANSFER ============ -->
+  <record id="demo_matrix_trf_low" model="nn.approval.matrix">
+    <field name="name">Transfer - Low Value</field>
+    <field name="request_type">nn.fund.transfer</field>
+    <field name="min_amount">0.0</field>
+    <field name="max_amount">50000.0</field>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_matrix_line_trf_low_gm" model="nn.approval.matrix.line">
+    <field name="sequence">10</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_gm_approver"/>
+    <field name="matrix_id" ref="demo_matrix_trf_low"/>
+  </record>
+  <record id="demo_matrix_trf_high" model="nn.approval.matrix">
+    <field name="name">Transfer - High Value</field>
+    <field name="request_type">nn.fund.transfer</field>
+    <field name="min_amount">50000.01</field>
+    <field name="max_amount">999999999.0</field>
+    <field name="company_id" ref="base.main_company"/>
+  </record>
+  <record id="demo_matrix_line_trf_high_gm" model="nn.approval.matrix.line">
+    <field name="sequence">10</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_gm_approver"/>
+    <field name="matrix_id" ref="demo_matrix_trf_high"/>
+  </record>
+  <record id="demo_matrix_line_trf_high_md" model="nn.approval.matrix.line">
+    <field name="sequence">20</field>
+    <field name="approval_group_id" ref="nn_fund_management.group_md_approver"/>
+    <field name="matrix_id" ref="demo_matrix_trf_high"/>
+  </record>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="login_footer_override" inherit_id="web.login_layout" name="Login Footer Override">
+        <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace">
+            <span>© 2026 NN Services &amp; Engineering Ltd. All Rights Reserved.</span>
+        </xpath>
+    </template>
+
+    <template id="nn_title_override" inherit_id="web.layout" name="NN Page Title Override">
+        <xpath expr="//title" position="replace">
+            <title t-esc="title or 'NN Fund Management'"/>
+        </xpath>
+    </template>
+
+    <template id="nn_favicon_override" inherit_id="web.layout" name="NN Favicon Override">
+        <xpath expr="//link[@rel='shortcut icon']" position="replace">
+            <link rel="icon"
+                  type="image/x-icon"
+                  href="/web/binary/company_logo"/>
+        </xpath>
+    </template>
+
+    <template id="nn_login_logo_override" inherit_id="web.login_layout" name="NN Login Logo Override">
+        <xpath expr="//div[hasclass('card-body')]//img" position="replace">
+            <img t-att-src="'/web/binary/company_logo'"
+                 alt="NN Services &amp; Engineering Ltd"
+                 style="max-height:120px; max-width: 100%; width:auto"/>
+        </xpath>
+    </template>
+
+    <template id="nn_apple_icon_override" inherit_id="web.webclient_bootstrap" name="NN Apple Icon Override">
+        <xpath expr="//link[@rel='apple-touch-icon']" position="replace">
+            <link rel="apple-touch-icon"
+                  type="image/png"
+                  href="/web/binary/company_logo"/>
+        </xpath>
+    </template>
+
+
+
+</odoo>

@@ -1,0 +1,35 @@
+#================================================================
+# NN Fund Management — LOCAL DEVELOPMENT OVERRIDE
+# Automatically merged with docker-compose.prod.yml
+# Usage: docker compose -f docker-compose.prod.yml up
+#================================================================
+
+services:
+  db:
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  odoo:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8069:8069"
+    volumes:
+      - .:/mnt/extra-addons/nn_fund_management:z
+
+  nginx:
+    image: nginx:1.26-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx.local.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+
+  certbot:
+    profiles:
+      - dont-start
+
+  backup:
+    profiles:
+      - dont-start

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_nn_fund_account_tree" model="ir.ui.view">
+        <field name="name">nn.fund.account.tree</field>
+        <field name="model">nn.fund.account</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="display_name" optional="show"/>
+                <field name="type" optional="show"/>
+                <field name="current_balance" widget="monetary" optional="show"/>
+                <field name="available_balance" widget="monetary" optional="show"/>
+                <field name="held_balance" widget="monetary" optional="show"/>
+                <field name="assigned_balance" widget="monetary" optional="show"/>
+                <field name="spent_balance" widget="monetary" optional="show"/>
+                <field name="company_id" optional="hide"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_nn_fund_account_form" model="ir.ui.view">
+        <field name="name">nn.fund.account.form</field>
+        <field name="model">nn.fund.account</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open_ledger" type="object"
+                            string="View Ledger" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_ledger" type="object"
+                                class="oe_stat_button" icon="fa-book"
+                                help="View ledger entries for this account">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="ledger_count"/></span>
+                                <span class="o_stat_text">Ledger Entries</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-balance-scale" type="object"
+                                name="action_check_financial_consistency"
+                                help="Check financial consistency of this account">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Consistency</span>
+                                <span class="o_stat_text">Check</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" readonly="0"/>
+                            <field name="code" readonly="0"/>
+                            <field name="type" readonly="0"/>
+                            <field name="parent_id" readonly="0"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                            <field name="is_closed"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Balances">
+                            <group>
+                                <group string="Current Period">
+                                    <field name="current_balance" widget="monetary"/>
+                                    <field name="available_balance" widget="monetary" class="text-success"/>
+                                </group>
+                                <group string="Breakdown">
+                                    <field name="held_balance" widget="monetary"/>
+                                    <field name="transfer_hold_balance" widget="monetary"/>
+                                    <field name="assigned_balance" widget="monetary"/>
+                                    <field name="spent_balance" widget="monetary"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_nn_fund_account_search" model="ir.ui.view">
+        <field name="name">nn.fund.account.search</field>
+        <field name="model">nn.fund.account</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="type"/>
+                <filter name="active" string="Active" domain="[('active','=',True)]"/>
+                <filter name="closed" string="Closed" domain="[('is_closed','=',True)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_type" string="Type" context="{'group_by':'type'}"/>
+                    <filter name="group_by_company" string="Company" context="{'group_by':'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_nn_fund_account" model="ir.actions.act_window">
+        <field name="name">Fund Accounts</field>
+        <field name="res_model">nn.fund.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_nn_fund_account_search"/>
+        <field name="help" type="html">
+            <p>Fund accounts represent the financial sources for projects and allocations.</p>
+            <p>All balances are automatically computed from ledger entries.</p>
+        </field>
+    </record>
+</odoo>

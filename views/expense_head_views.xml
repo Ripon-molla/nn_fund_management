@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_nn_expense_head_tree" model="ir.ui.view">
+        <field name="name">nn.expense.head.tree</field>
+        <field name="model">nn.expense.head</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="display_name"/>
+                <field name="project_id"/>
+                <field name="allocated_amount" widget="monetary"/>
+                <field name="spent_amount" widget="monetary"/>
+                <field name="remaining_amount" widget="monetary"/>
+                <field name="company_id" optional="hide"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_nn_expense_head_form" model="ir.ui.view">
+        <field name="name">nn.expense.head.form</field>
+        <field name="model">nn.expense.head</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="project_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                            <field name="allocated_amount" widget="monetary"/>
+                            <field name="spent_amount" widget="monetary"/>
+                            <field name="remaining_amount" widget="monetary"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="notes" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_nn_expense_head_search" model="ir.ui.view">
+        <field name="name">nn.expense.head.search</field>
+        <field name="model">nn.expense.head</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="project_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_project" string="Project" context="{'group_by':'project_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_nn_expense_head" model="ir.actions.act_window">
+        <field name="name">Expense Heads</field>
+        <field name="res_model">nn.expense.head</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_nn_expense_head_search"/>
+    </record>
+</odoo>

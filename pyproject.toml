@@ -1,0 +1,141 @@
+#================================================================
+# NN Fund Management — Python Project Configuration
+#================================================================
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "nn_fund_management"
+version = "18.0.4.0.0"
+description = "Enterprise fund management system with ledger-based accounting"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "LGPL-3.0-only"}
+authors = [
+    {name = "NN Systems", email = "dev@nn-systems.com"},
+]
+keywords = ["odoo", "fund-management", "accounting", "erp"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+    "Programming Language :: Python :: 3.11",
+    "Framework :: Odoo",
+    "Topic :: Office/Business :: Financial :: Accounting",
+]
+
+dependencies = [
+    "werkzeug",
+    "psycopg2-binary",
+    "lxml",
+    "pillow",
+    "reportlab",
+    "requests",
+    "openpyxl",
+    "python-dateutil",
+    "pytz",
+    "pyopenssl",
+    "cryptography",
+    "pandas",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black==24.10.0",
+    "isort==5.13.2",
+    "flake8==7.1.1",
+    "flake8-bugbear",
+    "flake8-comprehensions",
+    "pylint==3.3.1",
+    "pylint-odoo==8.0",
+    "bandit==1.8.0",
+    "pre-commit>=3.0",
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "freezegun>=1.5",
+    "safety>=3.0",
+]
+test = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "freezegun>=1.5",
+    "odoo>=18.0",
+]
+ci = [
+    "gitleaks",
+    "detect-secrets",
+]
+
+[project.urls]
+Homepage = "https://www.nn-systems.com"
+Repository = "https://github.com/nn-systems/nn_fund_management"
+Documentation = "https://docs.nn-systems.com/nn-fund-management"
+BugTracker = "https://github.com/nn-systems/nn_fund_management/issues"
+
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+include = '\.pyi?$'
+extend-exclude = '''
+/tests/
+/docs/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+skip_glob = ["docs/**", "tests/**"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "security: marks security tests",
+    "integration: marks integration tests",
+    "api: marks API tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["models", "controllers"]
+omit = ["*/tests/*", "*/migrations/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", "docs"]
+tests = ["B101", "B102", "B103", "B104", "B105", "B106", "B107", "B108",
+         "B109", "B110", "B111", "B112", "B201", "B301", "B302", "B303",
+         "B304", "B305", "B306", "B307", "B308", "B309", "B310", "B311",
+         "B312", "B313", "B314", "B315", "B316", "B317", "B318", "B319",
+         "B320", "B321", "B322", "B323", "B324", "B325", "B326", "B327",
+         "B328", "B329", "B330", "B331", "B332", "B333", "B334", "B335",
+         "B336", "B337", "B338", "B339", "B340", "B341", "B342", "B343",
+         "B344", "B345", "B346", "B347", "B348", "B349", "B350", "B351",
+         "B352", "B353", "B354", "B355", "B356", "B357", "B358", "B359",
+         "B360", "B361", "B362", "B363", "B364", "B365", "B366", "B367",
+         "B368", "B369", "B370", "B371", "B401", "B402", "B403", "B404",
+         "B405", "B406", "B407", "B408", "B409", "B410", "B411", "B412",
+         "B413", "B501", "B502", "B503", "B504", "B505", "B506", "B507",
+         "B508", "B509", "B510", "B511", "B512", "B513", "B514", "B515",
+         "B516", "B517", "B518", "B519", "B520", "B521", "B522", "B523",
+         "B524", "B525", "B526", "B527", "B528", "B529", "B530", "B531",
+         "B532", "B533", "B534", "B535", "B536", "B537", "B538", "B539",
+         "B540", "B541", "B601", "B602", "B603", "B604", "B605", "B606",
+         "B607", "B608", "B609", "B610", "B611", "B701"]
+
+[tool.pylint.messages_extension]
+good_names = "id,db,eo,fp,io"

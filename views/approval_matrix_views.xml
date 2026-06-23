@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_nn_approval_matrix_tree" model="ir.ui.view">
+        <field name="name">nn.approval.matrix.tree</field>
+        <field name="model">nn.approval.matrix</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="request_type"/>
+                <field name="min_amount" widget="monetary"/>
+                <field name="max_amount" widget="monetary"/>
+                <field name="effective_date"/>
+                <field name="expiration_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_nn_approval_matrix_form" model="ir.ui.view">
+        <field name="name">nn.approval.matrix.form</field>
+        <field name="model">nn.approval.matrix</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Matrix Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="request_type" required="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="min_amount" widget="monetary"/>
+                            <field name="max_amount" widget="monetary"/>
+                        </group>
+                    </group>
+                    <group string="Scope">
+                        <field name="project_id"/>
+                        <field name="expense_head_id"/>
+                    </group>
+                    <group string="Validity">
+                        <field name="effective_date"/>
+                        <field name="expiration_date"/>
+                    </group>
+                    <notebook>
+                        <page string="Approval Lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="integer"/>
+                                    <field name="display_name"/>
+                                    <field name="approval_group_id"/>
+                                    <field name="approval_user_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_nn_approval_matrix_search" model="ir.ui.view">
+        <field name="name">nn.approval.matrix.search</field>
+        <field name="model">nn.approval.matrix</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="request_type"/>
+                <filter name="group_by_request" string="Request Type"
+                        context="{'group_by': 'request_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_nn_approval_matrix" model="ir.actions.act_window">
+        <field name="name">Approval Matrices</field>
+        <field name="res_model">nn.approval.matrix</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first approval matrix
+            </p>
+            <p>
+                Configure approval matrices to define dynamic approval workflows
+                based on request type, amount, and scope.
+            </p>
+        </field>
+    </record>
+</odoo>

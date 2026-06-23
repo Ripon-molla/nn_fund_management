@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==========================================================
+         BANK EMAIL PARSER CONFIGURATION
+         ========================================================== -->
+
+    <!-- Tree View -->
+    <record id="view_nn_bank_email_parser_tree" model="ir.ui.view">
+        <field name="name">nn.bank.email.parser.tree</field>
+        <field name="model">nn.bank.email.parser</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="bank_name"/>
+                <field name="email_suffix"/>
+                <field name="default_account_id"/>
+                <field name="active"/>
+                <field name="success_count" string="OK"/>
+                <field name="failed_count" string="Failed"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_nn_bank_email_parser_form" model="ir.ui.view">
+        <field name="name">nn.bank.email.parser.form</field>
+        <field name="model">nn.bank.email.parser</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="active" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="bank_name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Bank Configuration">
+                            <field name="bank_name"/>
+                            <field name="email_suffix"
+                                   placeholder="e.g. notifications@bank.com"/>
+                            <field name="default_account_id"
+                                   domain="[('company_id','=',company_id),('active','=',True),('is_closed','=',False)]"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Processing Stats">
+                            <field name="log_count" string="Total Processed"/>
+                            <field name="success_count" string="Successful"/>
+                            <field name="failed_count" string="Failed"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Regex Templates">
+                            <group string="Field Extraction Patterns">
+                                <group>
+                                    <field name="regex_bank_name"
+                                           placeholder="Bank\s*:\s*(.+?)[\n\r]"/>
+                                    <field name="regex_account_number"
+                                           placeholder="Account\s*(?:No|Number|#)\s*:\s*(\d+)"/>
+                                    <field name="regex_transaction_ref"
+                                           placeholder="(?:Transaction|Tran|Ref)\s*(?:Ref|Reference|ID|#|No)\s*:\s*([A-Za-z0-9\-/]+)"/>
+                                    <field name="regex_date"
+                                           placeholder="(?:Date|Dt|Value Date)\s*:\s*(\d{2}[/-]\d{2}[/-]\d{4})"/>
+                                </group>
+                                <group>
+                                    <field name="regex_amount"
+                                           placeholder="(?:Amount|Amt|Credit|Deposit)\s*:\s*([\d,]+\.?\d*)"/>
+                                    <field name="regex_sender"
+                                           placeholder="(?:From|Sender|Remitter|Paid By)\s*:\s*(.+?)[\n\r]"/>
+                                    <field name="regex_message_id"
+                                           placeholder="Message-ID\s*:\s*&lt;(.+?)&gt;"/>
+                                </group>
+                            </group>
+                            <p class="oe_grey">
+                                Use Python regex syntax. Capture group () extracts the value.
+                                Fields are applied against the combined Subject + Body text.
+                            </p>
+                        </page>
+                        <page string="Description">
+                            <field name="description" nolabel="1"/>
+                        </page>
+                        <page string="Processing Log">
+                            <field name="log_count" invisible="1"/>
+                            <field name="id" invisible="1"/>
+                            <group>
+                                <field name="success_count"/>
+                                <field name="failed_count"/>
+                            </group>
+                            <field name="success_count" invisible="1"/>
+                            <!-- Use a manual list instead of one2many for performance -->
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_nn_bank_email_parser_search" model="ir.ui.view">
+        <field name="name">nn.bank.email.parser.search</field>
+        <field name="model">nn.bank.email.parser</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="bank_name"/>
+                <field name="email_suffix"/>
+                <field name="default_account_id"/>
+                <filter name="active" string="Active" domain="[('active','=',True)]"/>
+                <filter name="inactive" string="Inactive" domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_company" string="Company"
+                            context="{'group_by':'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_nn_bank_email_parser" model="ir.actions.act_window">
+        <field name="name">Bank Email Parsers</field>
+        <field name="res_model">nn.bank.email.parser</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_nn_bank_email_parser_search"/>
+        <field name="help" type="html">
+            <p>Configure bank email parsers to automatically process incoming fund notifications.</p>
+            <p>Each bank needs its own parser with field-specific regex patterns.</p>
+            <p><b>Security:</b> Never store bank credentials here. Only regex patterns for parsing.</p>
+        </field>
+    </record>
+
+    <!-- ==========================================================
+         BANK EMAIL PROCESSING LOG
+         ========================================================== -->
+
+    <!-- Tree View -->
+    <record id="view_nn_bank_email_log_tree" model="ir.ui.view">
+        <field name="name">nn.bank.email.log.tree</field>
+        <field name="model">nn.bank.email.log</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state=='failed'"
+                  decoration-success="state=='success'"
+                  decoration-warning="state=='duplicate'"
+                  decoration-muted="state=='ignored'">
+                <field name="state" widget="badge"/>
+                <field name="bank_name"/>
+                <field name="transaction_reference"/>
+                <field name="amount" widget="monetary" sum="Total"/>
+                <field name="sender"/>
+                <field name="transaction_date"/>
+                <field name="parser_id"/>
+                <field name="incoming_fund_id" optional="show"/>
+                <field name="retry_count"/>
+                <field name="create_date"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_nn_bank_email_log_form" model="ir.ui.view">
+        <field name="name">nn.bank.email.log.form</field>
+        <field name="model">nn.bank.email.log</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_view_incoming_fund" type="object"
+                            string="View Incoming Fund"
+                            class="btn-primary"
+                            invisible="not incoming_fund_id"/>
+                    <button name="action_reprocess" type="object"
+                            string="Reprocess"
+                            class="btn-warning"
+                            invisible="state != 'failed'"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Processing Info">
+                            <field name="state" widget="badge"/>
+                            <field name="parser_id"/>
+                            <field name="retry_count"/>
+                            <field name="create_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Transaction Details">
+                            <field name="bank_name"/>
+                            <field name="account_number"/>
+                            <field name="transaction_reference"/>
+                            <field name="transaction_date"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="sender"/>
+                            <field name="incoming_fund_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Error Details" invisible="error_message == False">
+                            <field name="error_message" nolabel="1"/>
+                        </page>
+                        <page string="Raw Email Body"
+                              groups="group_fund_administrator">
+                            <field name="raw_email_body" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_nn_bank_email_log_search" model="ir.ui.view">
+        <field name="name">nn.bank.email.log.search</field>
+        <field name="model">nn.bank.email.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="transaction_reference"/>
+                <field name="bank_name"/>
+                <field name="sender"/>
+                <field name="email_message_id"/>
+                <field name="parser_id"/>
+                <field name="incoming_fund_id"/>
+                <filter name="success" string="Success" domain="[('state','=','success')]"/>
+                <filter name="failed" string="Failed" domain="[('state','=','failed')]"/>
+                <filter name="duplicate" string="Duplicate" domain="[('state','=','duplicate')]"/>
+                <filter name="today" string="Today"
+                        domain="[('create_date','&gt;=',context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="needs_reprocess" string="Needs Reprocess"
+                        domain="[('state','=','failed'),('retry_count','&lt;',3)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="State" context="{'group_by':'state'}"/>
+                    <filter name="group_by_bank" string="Bank" context="{'group_by':'bank_name'}"/>
+                    <filter name="group_by_date" string="Date" context="{'group_by':'create_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_nn_bank_email_log" model="ir.actions.act_window">
+        <field name="name">Bank Email Log</field>
+        <field name="res_model">nn.bank.email.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_nn_bank_email_log_search"/>
+        <field name="help" type="html">
+            <p>View all bank email processing attempts.</p>
+            <p>Green = Success, Red = Failed, Yellow = Duplicate, Grey = Ignored.</p>
+            <p>Failed entries can be reprocessed after fixing the underlying issue.</p>
+        </field>
+    </record>
+</odoo>

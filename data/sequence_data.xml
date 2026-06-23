@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Fund Account Sequence -->
+        <record id="seq_nn_fund_account" model="ir.sequence">
+            <field name="name">Fund Account</field>
+            <field name="code">nn.fund.account</field>
+            <field name="prefix">FA/%(year)s/</field>
+            <field name="suffix">/%(month)s</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Incoming Fund Sequence -->
+        <record id="seq_nn_incoming_fund" model="ir.sequence">
+            <field name="name">Incoming Fund</field>
+            <field name="code">nn.incoming.fund</field>
+            <field name="prefix">IF/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Fund Ledger Sequence -->
+        <record id="seq_nn_fund_ledger" model="ir.sequence">
+            <field name="name">Fund Ledger</field>
+            <field name="code">nn.fund.ledger</field>
+            <field name="prefix">LEDGER/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Fund Allocation Sequence -->
+        <record id="seq_nn_fund_allocation" model="ir.sequence">
+            <field name="name">Fund Allocation</field>
+            <field name="code">nn.fund.allocation</field>
+            <field name="prefix">AL/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Fund Requisition Sequence -->
+        <record id="seq_nn_fund_requisition" model="ir.sequence">
+            <field name="name">Fund Requisition</field>
+            <field name="code">nn.fund.requisition</field>
+            <field name="prefix">RQ/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Fund Bill Sequence -->
+        <record id="seq_nn_fund_bill" model="ir.sequence">
+            <field name="name">Fund Bill</field>
+            <field name="code">nn.fund.bill</field>
+            <field name="prefix">BL/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Fund Transfer Sequence -->
+        <record id="seq_nn_fund_transfer" model="ir.sequence">
+            <field name="name">Fund Transfer</field>
+            <field name="code">nn.fund.transfer</field>
+            <field name="prefix">TR/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>
